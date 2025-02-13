@@ -639,16 +639,27 @@ function updateFlashcardDisplay() {
   document.querySelector('.answer').textContent = card.answer;
   document.querySelector('.explanation').innerHTML = `
     ${card.explanation}
-    <div class="source">${formatTime(card.timestamp)}</div>
+    <div class="source"><p>${formatTime(card.timestamp)}</p></div>
   `;
 
   // Reset trạng thái flashcard
-  document.querySelector('.flashcard').classList.remove('flipped');
+  const flashcardElement = document.querySelector('.flashcard');
+  flashcardElement.classList.remove('flipped');
   document.querySelector('.hint').style.display = 'none';
   document.querySelector('.explanation').style.display = 'none';
 
   // Cập nhật bộ đếm thẻ
   document.getElementById('cardCounter').textContent = `${currentCardIndex + 1}/${flashcards.length}`;
+
+  // Thêm sự kiện click cho phần "source"
+  const sourceElement = document.querySelector('.source');
+  if (sourceElement && player && typeof player.seekTo === "function") {
+    sourceElement.style.cursor = 'pointer';
+    sourceElement.addEventListener('click', () => {
+      player.seekTo(card.timestamp, true);
+      player.playVideo();
+    });
+  }
 }
 
 loadVideo();

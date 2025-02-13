@@ -773,7 +773,8 @@ body {
 .flashcard {
     width: 100%;
     max-width: 500px;
-    height: 350px;
+    min-height: 350px;
+    height: fit-content;
     perspective: 1000px;
     margin: 0 auto;
 }
@@ -848,11 +849,22 @@ body {
 
 .source {
     font-size: var(--font-size-sm);
+    font-style: normal;
+    font-weight: bold;
     color: var(--muted-foreground);
     margin-top: 0.5rem;
     padding: 0.25rem 0.5rem;
     border-radius: var(--radius);
     background: var(--secondary);
+}
+
+.source p {
+    background-color: var(--background);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    width: fit-content;
+    margin: 0 auto;
 }
 
 /* Thêm animation cho flashcard */
@@ -1050,8 +1062,6 @@ body {
 .btn::before {
   transition: opacity 0.3s ease;
 }
-
-/* ...existing flashcard styles... */
 
 @keyframes slideIn {
   from {
