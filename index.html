@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouLearn</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --background: #ffffff;
+        --foreground: #0f172a;
+        --card: #ffffff;
+        --border: #e2e8f0;
+        --input: #e2e8f0;
+      }
+
+      .dark {
+        --background: #000000;
+        --foreground: #ffffff;
+        --card: #121212;
+        --border: #1e1e1e;
+        --input: #1e1e1e;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--background);
+        color: var(--foreground);
+        min-height: 100vh;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+      }
+
+      .title {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        transform: translateY(0);
+        opacity: 1;
+        transition: transform 0.5s ease, opacity 0.5s ease;
+      }
+
+      .title.animate {
+        transform: translateY(-20px);
+        opacity: 0;
+      }
+
+      .input-wrapper {
+        width: 100%;
+        max-width: 600px;
+        display: flex;
+        background-color: var(--card);
+        border-radius: 1rem;
+        border: 1px solid var(--border);
+        padding: 1rem;
+        transform: scale(1);
+        transition: transform 0.3s ease, background-color 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      .input-wrapper:focus-within {
+        transform: scale(1.02);
+      }
+
+      .input-field {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: var(--foreground);
+        font-size: 1rem;
+        outline: none;
+        transition: color 0.3s ease;
+      }
+
+      .input-field::placeholder {
+        color: #94a3b8;
+      }
+
+      .submit-button {
+        background-color: var(--foreground);
+        border: none;
+        border-radius: 0.75rem;
+        padding: 0.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 0.5rem;
+        transition: transform 0.2s ease, background-color 0.3s ease;
+      }
+
+      .submit-button:hover {
+        transform: scale(1.1);
+      }
+
+      .submit-button svg {
+        stroke: var(--background);
+        transition: stroke 0.3s ease;
+      }
+
+      @media (max-width: 640px) {
+        .title {
+          font-size: 2rem;
+        }
+
+        .input-wrapper {
+          margin: 0 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <h1 class="title">Hôm nay bạn muốn học gì?</h1>
+
+      <div class="input-wrapper">
+        <input
+          type="text"
+          class="input-field"
+          placeholder="Tải tệp lên, dán video YouTube hoặc ghi lại bài giảng"
+        />
+        <button class="submit-button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const themeToggle = document.getElementById("themeToggle");
+        const title = document.querySelector(".title");
+
+        // Lấy trạng thái theme từ localStorage
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "dark") {
+          document.body.classList.add("dark");
+        }
+
+        // Toggle theme & lưu trạng thái
+        themeToggle.addEventListener("click", () => {
+          title.classList.add("animate");
+
+          setTimeout(() => {
+            document.body.classList.toggle("dark");
+            const isDark = document.body.classList.contains("dark");
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+
+            title.classList.remove("animate");
+          }, 300);
+        });
+      });
+
+      // Hàm lấy videoId từ URL YouTube
+      function getYouTubeVideoId(url) {
+        // Biểu thức chính quy để lấy video ID từ các dạng URL khác nhau của YouTube
+        var regExp =
+          /^.*((youtu\.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+        var match = url.match(regExp);
+        if (match && match[7].length === 11) {
+          return match[7];
+        }
+        return null;
+      }
+
+      const input_field = document.querySelector(".input-field");
+      const submit_button = document.querySelector(".submit-button");
+
+      submit_button.addEventListener("click", () => {
+        localStorage.setItem("videoId", getYouTubeVideoId(input_field.value));
+        window.location.href = "learn.html";
+      });
+    </script>
+  </body>
+</html>

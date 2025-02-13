@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouLearn</title>
+    <link rel="shortcut icon" href="./logo.svg" type="image/x-icon">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.5/split.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">YouLearn</h1>
+                <button id="sidebarToggle" class="btn-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="btn btn-ghost new"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg><span>Tạo mới</span></button>
+                <button class="btn btn-ghost"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg><span>Lịch sử</span></button>
+                <button class="btn btn-ghost"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Gần đây</span></button>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="themeToggle" class="btn btn-ghost">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                    <span>Chuyển đổi giao diện</span>
+                </button>
+                <button id="settings" class="btn btn-ghost"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span>Cài đặt</span></button>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <div id="leftPanel" class="left-panel">
+                <div class="video-player">
+                    <div class="video-container"></div>
+                </div>
+                <div class="transcript-chapters">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="chapters">Chapters</button>
+                        <button class="tab-btn" data-tab="transcript">Transcript</button>
+                    </div>
+                    <div id="chaptersContent" class="tab-content active">
+                        <button class="regenerate-btn chapters-btn">
+                            <i class="fas fa-sitemap"></i>
+                            <span>Tạo mục lục</span>
+                            <div class="galaxy-spinner"></div>
+                        </button>
+                        <div class="chapter-list">
+                        </div>
+                    </div>
+                    <div id="transcriptContent" class="tab-content">
+                        <div class="transcript">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="rightPanel" class="right-panel">
+                <div class="ai-section">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="chat">Trò chuyện</button>
+                        <button class="tab-btn" data-tab="flashcard">Flashcard</button>
+                        <button class="tab-btn" data-tab="summary">Tóm tắt</button>
+                    </div>
+                    <div id="chatContent" class="tab-content active">
+                        <div id="messages" class="chat-messages"></div>
+                        <div class="chat-input-container">
+                            <input id="input" type="text" placeholder="Nhập tin nhắn..." class="chat-input">
+                            <button id="send" class="chat-send">Gửi</button>
+                        </div>
+                    </div>
+                    <div id="flashcardContent" class="tab-content">
+                        <button class="regenerate-btn flashcard-btn">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Tạo Flashcard</span>
+                            <div class="galaxy-spinner"></div>
+                        </button>
+                    </div>
+                    <div id="summaryContent" class="tab-content">
+                        <button class="regenerate-btn summary-btn">
+                            <i class="fas fa-book-reader"></i>
+                            <span>Tạo bản tóm tắt</span>
+                            <div class="galaxy-spinner"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script type="module" src="script.js"></script>
+</body>
+</html>

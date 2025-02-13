@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+</head>
+<body>
+    <div id="messages" style="height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;"></div>
+    <input id="input" type="text" placeholder="Nhập tin nhắn...">
+    <button id="send">Gửi</button>
+
+    <script type="module">
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+
+        const apiKey = "AIzaSyDKuUZczmcIsNg8ewNnZzEBv0eNnNFgPkE";
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+        let chatSession = model.startChat({ history: [] });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const input = document.getElementById("input");
+            const sendBtn = document.getElementById("send");
+            const messages = document.getElementById("messages");
+
+            function addMessage(text, isUser) {
+                const div = document.createElement("div");
+                div.textContent = text;
+                div.style.textAlign = isUser ? "right" : "left";
+                messages.appendChild(div);
+                messages.scrollTop = messages.scrollHeight;
+            }
+
+            async function sendMessage() {
+                const text = input.value.trim();
+                if (!text) return;
+                addMessage(text, true);
+                input.value = "";
+                
+                const response = await chatSession.sendMessageStream(text);
+                let reply = "";
+                for await (const chunk of response.stream) {
+                    reply += chunk.text();
+                }
+                addMessage(reply, false);
+            }
+
+            sendBtn.addEventListener("click", sendMessage);
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") sendMessage();
+            });
+        });
+    </script>
+</body>
+</html>
