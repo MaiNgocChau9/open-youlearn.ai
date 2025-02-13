@@ -1,5 +1,7 @@
 import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
+const API_URL = ''; // Để trống vì API path sẽ tự động match với domain
+
 // Initialize API clients
 const apiKey = "AIzaSyA6nRUwDozn7hYsRbqGXAtWwm1QU09Umwk";
 const genAI = new GoogleGenerativeAI(apiKey);
