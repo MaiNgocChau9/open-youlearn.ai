@@ -161,7 +161,9 @@ function initFlashcardContainer() {
     <div class="flashcard">
       <div class="flashcard-inner">
         <div class="flashcard-front">
-          <div class="question"></div>
+          <div class="question">
+            <p><br><br><br>Nhấn vào nút "Tạo Flashcard" để bắt đầu<br><br><br></p>
+          </div>
           <button class="btn btn-ghost hint-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/>
@@ -199,7 +201,8 @@ function setupRegenerateButtons() {
     btn.addEventListener('click', async () => {
       if (btn.classList.contains('loading')) return;
       
-      btn.classList.add('loading');
+      // Add cosmic generation effect
+      btn.classList.add('loading', 'cosmic-effect');
       
       try {
         if (btn.classList.contains('chapters-btn')) {
@@ -228,13 +231,14 @@ function setupRegenerateButtons() {
           summaryText = summaryText.replace(/\n{3,}/g, "\n\n").trim();
           document.getElementById('summaryContent').innerHTML = marked.parse(summaryText);
         }
+        // After regeneration completes, hide the button
+        btn.style.display = 'none';
       } catch (error) {
         console.error('Error regenerating content:', error);
-        // Hiển thị thông báo lỗi cho người dùng
-        const errorMessage = error.message || 'Đã xảy ra lỗi khi tạo nội dung';
-        alert(errorMessage);
+        alert(error.message || 'Đã xảy ra lỗi khi tạo nội dung');
       } finally {
-        btn.classList.remove('loading');
+        // Remove cosmic generation effect after completion
+        btn.classList.remove('loading', 'cosmic-effect');
       }
     });
   });
@@ -384,7 +388,6 @@ async function loadVideo() {
   initYouTubeAPI();
 
   const transcriptEl = document.querySelector(".transcript");
-  const summaryEl = document.querySelector("#summaryContent");
 
   try {
     const response = await fetch(`http://localhost:3000/api/transcript/${videoId}`);
@@ -445,20 +448,8 @@ async function loadVideo() {
 
     // Khởi tạo chat session với lịch sử đầy đủ
     chatSession = model.startChat({ history: chatHistory });
-
-    // Tạo và render chapters
-    const chaptersData = await generateChapters(fullTextForChapters);
-    if (chaptersData && chaptersData.chapters) {
-      renderChapters(chaptersData.chapters);
-    }
-
-    // Tạo và khởi tạo flashcards
-    const flashcardsData = await generateFlashcards(fullTextForChapters);
-    if (flashcardsData && flashcardsData.flashcards) {
-      initFlashcards(flashcardsData.flashcards);
-    }
-
-    // Tạo tóm tắt từ fullTextForChat
+    
+    // Set up các prompt cho summary
     summaryPrompt = `
 # Hãy tạo một bản tóm tắt chi tiết và toàn diện nhất có thể về các sự kiện, thông tin và kiến thức được trình bày trong video. Bản tóm tắt này KHÔNG PHẢI là một danh sách liệt kê tất cả các sự kiện, mà là một bản tóm tắt có cấu trúc, nhóm các sự kiện liên quan lại với nhau thành các chủ đề lớn.
 
@@ -490,12 +481,7 @@ Markdown, tuân thủ chặt chẽ các yêu cầu trên.
 ${fullTextForChat}
 </transcript>      
 `;
-    summaryEl.innerHTML = "<p>Đang tạo tóm tắt...</p>";
-    const summaryResult = await summaryModel.generateContent(summaryPrompt);
-    const summaryResponse = await summaryResult.response;
-    let summaryText = await summaryResponse.text();
-    summaryText = summaryText.replace(/\n{3,}/g, "\n\n").trim();
-    summaryEl.innerHTML = marked.parse(summaryText);
+
   } catch (error) {
     console.error("Error fetching transcript:", error);
     alert("Đã xảy ra lỗi khi tải transcript. Vui lòng thử lại.");
