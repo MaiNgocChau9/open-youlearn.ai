@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
 const API_URL = window.location.hostname === 'localhost' 
   ? 'http://localhost:3000'
-  : 'https://open-youlearnai.vercel.app';
+  : 'https://open-youlearn-ai.vercel.app';
 
 // Initialize API clients
 const apiKey = "AIzaSyA6nRUwDozn7hYsRbqGXAtWwm1QU09Umwk";
@@ -394,9 +394,23 @@ async function loadVideo() {
   const transcriptEl = document.querySelector(".transcript");
 
   try {
-    const response = await fetch(`${API_URL}/api/transcript/${videoId}`);
-    if (!response.ok) throw new Error("Network response was not ok");
+    console.log('Fetching transcript from:', `${API_URL}/api/transcript/${videoId}`); // Debug log
+    const response = await fetch(`${API_URL}/api/transcript/${videoId}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`Network response was not ok: ${response.status} ${response.statusText}${errorData.error ? ` - ${errorData.error}` : ''}`);
+    }
+
     const transcript = await response.json();
+    if (!Array.isArray(transcript)) {
+      throw new Error('Invalid transcript data received');
+    }
 
     const simplifiedTranscript = simplifyTranscript(transcript);
 
