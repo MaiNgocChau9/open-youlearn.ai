@@ -6,7 +6,15 @@ const app = express();
 const port = 3000;
 
 // Enable CORS for all routes
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:5500',
+    'https://open-youlearnai.vercel.app'
+  ],
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
 
 app.get('/api/transcript/:videoId', async (req, res) => {
   try {

@@ -1,6 +1,8 @@
 import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-const API_URL = ''; // Để trống vì API path sẽ tự động match với domain
+const API_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:3000'
+  : 'https://open-youlearnai.vercel.app';
 
 // Initialize API clients
 const apiKey = "AIzaSyA6nRUwDozn7hYsRbqGXAtWwm1QU09Umwk";
@@ -392,7 +394,7 @@ async function loadVideo() {
   const transcriptEl = document.querySelector(".transcript");
 
   try {
-    const response = await fetch(`http://localhost:3000/api/transcript/${videoId}`);
+    const response = await fetch(`${API_URL}/api/transcript/${videoId}`);
     if (!response.ok) throw new Error("Network response was not ok");
     const transcript = await response.json();
 
