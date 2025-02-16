@@ -1,8 +1,6 @@
 import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-const API_URL = window.location.hostname === 'localhost' 
-  ? 'http://localhost:3000'
-  : 'https://open-youlearn-ai.vercel.app';
+const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://open-youlearnai.vercel.app';
 
 // Initialize API clients
 const apiKey = "AIzaSyA6nRUwDozn7hYsRbqGXAtWwm1QU09Umwk";
