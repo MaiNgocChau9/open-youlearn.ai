@@ -1,0 +1,17 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "api/transcript.js",
+        "use": "@vercel/node"
+      },
+      {
+        "src": "**/*",
+        "use": "@vercel/static-build"
+      }
+    ],
+    "routes": [
+      { "src": "/api/transcript/(.*)", "dest": "/api/transcript.js" },
+      { "src": "/(.*)", "dest": "/$1" }
+    ]
+  }
