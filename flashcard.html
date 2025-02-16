@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #1a1a1a 0%, #2d3436 100%) !important;
+            }
+
+            .flashcard-front, .flashcard-back {
+                background: rgba(45, 45, 45, 0.95) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            }
+
+            .question, .answer {
+                color: #ecf0f1 !important;
+            }
+
+            .hint, .explanation {
+                color: #bdc3c7 !important;
+            }
+
+            .source {
+                background: rgba(44, 62, 80, 0.4) !important;
+                color: #7f8c8d !important;
+            }
+        }
+
+        .flashcard {
+            width: 60%;
+            height: 400px;
+            perspective: 1000px;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .flashcard-back {
+            transform: rotateY(180deg);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .question, .answer {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .hint, .explanation {
+            display: none;
+            margin: 12px 0;
+            font-style: italic;
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.5;
+            background: rgba(236, 240, 241, 0.6);
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 280px;
+            backdrop-filter: blur(5px);
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 8px 20px;
+            border: none;
+            background: #2d3436;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            overflow: hidden;
+            position: absolute;
+            top: 8px;
+            left: 20px;
+        }
+
+        button:hover {
+            background: #666;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .source {
+            font-size: 0.85em;
+            color: #95a5a6;
+            margin-top: 8px;
+            font-style: normal;
+            background: rgba(236, 240, 241, 0.4);
+            padding: 4px 8px;
+            border-radius: 4px;
+            backdrop-filter: blur(5px);
+        }
+
+        .hint, .explanation {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .hint[style*="display: block"],
+        .explanation[style*="display: block"] {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="flashcard">
+        <div class="flashcard-inner">
+            <div class="flashcard-front">
+                <div class="question">Thủ đô của Việt Nam là gì?</div>
+                <button onclick="showHint(event)">Gợi ý</button>
+                <div class="hint">Thành phố này nằm ở miền Bắc Việt Nam</div>
+            </div>
+            <div class="flashcard-back">
+                <div class="answer">Hà Nội</div>
+                <button onclick="showExplanation(event)">Giải thích</button>
+                <div class="explanation">
+                    Hà Nội là thủ đô của Việt Nam từ năm 1010 dưới triều Lý
+                    <div class="source">Nguồn: 6:31</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const flashcard = document.querySelector('.flashcard');
+        
+        flashcard.addEventListener('click', function(e) {
+            // Only flip if we didn't click a button
+            if (!e.target.matches('button')) {
+                this.classList.toggle('flipped');
+            }
+        });
+
+        function showHint(event) {
+            event.stopPropagation(); // Prevent card from flipping
+            const hint = event.target.parentElement.querySelector('.hint');
+            hint.style.display = hint.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function showExplanation(event) {
+            event.stopPropagation(); // Prevent card from flipping
+            const explanation = event.target.parentElement.querySelector('.explanation');
+            explanation.style.display = explanation.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>
